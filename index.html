@@ -74,15 +74,15 @@
     const graphData = {
       nodes: [
         { id: "index.html",  title: "Home" },
-        { id: "about.html",  title: "About" },
-        { id: "contact.html", title: "Contact" },
-        { id: "blog.html",   title: "Blog" }
+        { id: "ficha001.html",  title: "Ficha001" },
+        { id: "ficha002.html", title: "Ficha002" },
+        { id: "ficha003.html",   title: "Ficha003" }
       ],
       links: [
-        { source: "index.html",  target: "about.html" },
-        { source: "index.html",  target: "contact.html" },
-        { source: "index.html",  target: "blog.html" },
-        { source: "blog.html",   target: "about.html" }
+        { source: "ficha001.html",  target: "ficha002.html" },
+        { source: "ficha001.html",  target: "ficha003.html" },
+        { source: "ficha002.html",  target: "ficha003.html" },
+        { source: "ficha003.html",   target: "ficha001.html" }
       ]
     };
 

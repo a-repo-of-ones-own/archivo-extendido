@@ -182,7 +182,7 @@
 
     node.append("circle")
       .attr("r", 16)
-      //.attr("fill", CIRCLE_COLOR)
+      .attr("fill", d => d.color || "#7c3aed")  // fallback color just in case
       .on("click", (event, d) => {
         // Update iframe src
         document.getElementById("viewer").src = d.id;

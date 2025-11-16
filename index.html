@@ -178,11 +178,11 @@
       );
 
     // 👉 Set your specific circle color here
-    const CIRCLE_COLOR = "#7c3aed"; // purple; change this to whatever you like
+    //const CIRCLE_COLOR = "#7c3aed"; // purple; change this to whatever you like
 
     node.append("circle")
       .attr("r", 16)
-      .attr("fill", CIRCLE_COLOR)
+      //.attr("fill", CIRCLE_COLOR)
       .on("click", (event, d) => {
         // Update iframe src
         document.getElementById("viewer").src = d.id;

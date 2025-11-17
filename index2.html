@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HTML Files Graph + Iframe</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    /* Left: graph, Right: iframe */
+    #graph-container {
+      flex: 1;
+      border-right: 1px solid #ddd;
+    }
+
+    #viewer {
+      flex: 1;
+      border: none;
+    }
+
+    #graph {
+      width: 100%;
+      height: 100%;
+    }
+
+    .link {
+      stroke: #bbb;
+      stroke-width: 1.2px;
+    }
+
+    .node circle {
+      cursor: pointer;
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .node text {
+      font-size: 11px;
+      pointer-events: none;
+      user-select: none;
+      fill: #333;
+    }
+
+    .node.selected circle {
+      stroke: #000;
+      stroke-width: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left: D3 graph -->
+  <div id="graph-container">
+    <svg id="graph"></svg>
+  </div>
+
+  <!-- Right: iframe that changes when clicking a node -->
+  <iframe id="viewer" src="index.html"></iframe>
+
+  <!-- D3 -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    // ---------------------------------------------------------
+    // 1. Define your HTML files and links here
+    // ---------------------------------------------------------
+    const graphData = {
+      nodes: [
+        { id: "nettelGuadalupe.html",  title: "Guadalupe Nette", color:"#F58CF5" },
+        { id: "arredondoInes.html",  title: "Inés Arredondo", color:"#F58CF5" },
+        { id: "campobelloNellie.html",  title: "Nellie Campobello", color:"#F58CF5" },
+        { id: "gerberbicecciVeronica.html",  title: "Verónica Gerber Bicecii", color:"#F58CF5" },
+        { id: "glantzMargo.html",  title: "Margo Glantz", color:"#F58CF5" },
+        { id: "jacobsBarbara.html",  title: "Bárbara Jacobs", color:"#F58CF5" },
+        { id: "luiselliValeria.html",  title: "Valeria Luiselli", color:"#F58CF5" },
+        { id: "riveragarzaCristina.html",  title: "Cristina Rivera Garza", color:"#F58CF5" },
+        { id: "tarazonaDaniela.html",  title: "Daniel Tarazona", color:"#F58CF5" },
+        { id: "vicensJosefine.html",  title: "Josefine Vincens", color:"#F58CF5" },
+        { id: "duenasGuadalupe.html",  title: "Guadalupe Dueñas", color:"#F58CF5" },
+        { id: "castellanosRosario.html",  title: "Rosario Castellanos", color:"#F58CF5" },
+        { id: "garroElena.html",  title: "Elena Garro", color:"#F58CF5" },
+        { id: "davilaAmparo.html",  title: "Amparo Davila", color:"#F58CF5" },
+        { id: "chapelaAndrea.html",  title: "Andrea Chapela", color:"#F58CF5" },
+        { id: "nettelCuerpoQueNaci2008.html",  title: "El cuerpo en que nací", color:"#9C27F5" },
+        { id: "riveragarzaMuerteMe2007.html",  title: "La muerte me da", color:"#9C27F5"  },
+        { id: "chapelaProceso2021.html",  title: "En proceso", color:"#9C27F5"  },
+        { id: "riveragarzaAutobiografiaAlgodon2020.html",  title: "Autobiografía del algodón", color:"#9C27F5"  },
+        { id: "castellanosLeccionCocina1992.html",  title: "Lección de cocina", color:"#9C27F5"  },
+        { id: "davilaNocheGuitarrasRotas2016.html",  title: "La noche de las guitarras rotas", color:"#9C27F5"  },
+        { id: "duenasFuga1991.html",  title: "La fuga", color:"#9C27F5"  },
+        { id: "duenasAmigo1991.html",  title: "El amigo", color:"#9C27F5"  },
+        { id: "garroGato1997.html",  title: "El gato", color:"#9C27F5"  },
+        { id: "arredondoSenal1965.html",  title: "La señal", color:"#9C27F5"  },
+        { id: "glantzGenealogias2006.html",  title: "Las genealogías", color:"#9C27F5"  },
+        { id: "jacobsHojasMuertas1987.html",  title: "Las hojas muertas", color:"#9C27F5"  },
+        { id: "luiselliPapelesFalsos2010.html",  title: "Papeles falsos", color:"#9C27F5"  },
+        { id: "luiselliIngravidos2012.html",  title: "Los ingrávidos", color:"#9C27F5"  },
+        { id: "gerberbicecciConjuntoVacio2021.html",  title: "Conjunto vacío", color:"#9C27F5"  },
+        { id: "tarazonaIslaPartida2021.html",  title: "Isla partida", color:"#9C27F5"  },
+        { id: "campobelloCartuchoRelatosLucha2016.html",  title: "Cartucho: relatos de la lucha en el norte de México", color:"#9C27F5"  },
+        { id: "vicensLibroVacio2020.html",  title: "El libro vacío", color:"#9C27F5"  },
+        { id: "riveragarzaMasMia1998.html",  title: "La más mía", color:"#9C27F5"  },
+        { id: "riveragarzaImaginacionPublica2015.html",  title: "La imaginación pública", color:"#9C27F5"  },
+        { id: "riveragarzaMuertosIndocilesNecroescrituras2020.html",  title: "Los muertos indóciles: necroescrituras y desapropiación", color:"#9C27F5"  },
+        { id: "riveragarzaInvencibleVeranoLiliana2023.html",  title: "El invencible verano de Liliana: una hermana en busca de justicia", color:"#9C27F5"  },
+        { id: "riveragarzaCrestaIlion2020.html",  title: "La cresta de Ilión", color:"#9C27F5"  },
+        { id: "riveragarzaMalTaiga2019.html",  title: "El mal de la taiga", color:"#9C27F5"  },
+        { id: "riveragarzaNadieMeVera2016.html",  title: "Nadie me verá llorar", color:"#9C27F5"  },
+        { id: "gutierrezestupinanAutoficcionAmericaLatina2024a.html",  title: "Autoficción en América Latina: teoría y perspectivas analíticas", color:"#27ADF5" },
+        { id: "fuentesAutoficcionMexicoEstudios2023.html",  title: "Autoficción en México y los estudios literarios contemporáneos", color:"#27ADF5" },
+        { id: "fernandezgonzalezMigracionesCegueraAutoficcion2025.html",  title: "Migraciones, ceguera y autoficción a través de El cuerpo en que nací de Guadalupe Nettel", color:"#27ADF5" },
+        { id: "villegassalasReconfiguracionMandatoMasculinidad2023.html",  title: "Reconfiguración del mandato de masculinidad en la figura parental en textos autoficcionales de Marcos Giralt Torrente, Guadalupe Nettel y Jeanette Winterson.", color:"#27ADF5" },
+        { id: "licataFiliacionesHiladasCristina2023.html",  title: "Las filiaciones hiladas de Cristina Rivera Garza en Autobiografía del algodón (2020)", color:"#27ADF5" },
+        { id: "wentworthAritmeticaQueEncarna2022.html",  title: "La aritmética que encarna El cuerpo en que nací de Guadalupe Nettel", color:"#27ADF5" },
+        { id: "gomezcanolesAutoriaAutoficcionMarco2025.html",  title: "Autoría y (auto)ficción en el marco de la crítica literaria feminista", color:"#27ADF5" },
+        { id: "gutierrezestupinanTornoAutoficcionBreve2024a.html",  title: "En torno a la autoficción breve en América Latina", color:"#27ADF5" },
+        { id: "gutierrezdevelascoPresenciaAusenciaResguardo2024a.html",  title: "La presencia de la ausencia. Resguardo, recuperación y autoficción en Isla partida de Daniela Tarazona", color:"#27ADF5" },
+        { id: "murciaEstrategiasAutoficcionFabuladora2021.html",  title: "Estrategias de autoficción fabuladora en La muerte me da, de Cristina Rivera Garza", color:"#27ADF5" },
+        { id: "lopezmorenoCuerpoFragmentadoComo2024a.html",  title: "El cuerpo fragmentado como lugar de la autoficción en \"En proceso\" de Andrea Chapela", color:"#27ADF5" },
+        { id: "perweenPosmemoriaIdentidadAutoficcion2024.html",  title: "Posmemoria, identidad y autoficción en El cuerpo en que nací (2011) de Guadalupe", color:"#27ADF5" },
+        { id: "arzabalFiguracionesSesgadasTeatralidad2022.html",  title: "Figuraciones sesgadas: teatralidad, intermedialidad y yo autoral en Cristina Rivera Garza", color:"#27ADF5" },
+        { id: "bergheAutoficcionesHispanoamericanasHacia2024.html",  title: "Autoficciones hispanoamericanas: hacia una cartografía crítica", color:"#27ADF5" }
+
+      ],
+      links: [
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaAutobiografiaAlgodon2020.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaInvencibleVeranoLiliana2023.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaMalTaiga2019.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaCrestaIlion2020.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaImaginacionPublica2015.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaMasMia1998.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaNadieMeVera2016.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaMuertosIndocilesNecroescrituras2020.html" },
+        { source: "arzabalFiguracionesSesgadasTeatralidad2022.html",   target: "riveragarzaMuerteMe2007.html" },
+        { source: "bergheAutoficcionesHispanoamericanasHacia2024.html", target: "gerberbicecciConjuntoVacio2021.html" },
+        { source: "bergheAutoficcionesHispanoamericanasHacia2024.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "bergheAutoficcionesHispanoamericanasHacia2024.html", target: "riveragarzaMuerteMe2007.html" },
+        { source: "bergheAutoficcionesHispanoamericanasHacia2024.html", target: "luiselliIngravidos2012.html" },
+        { source: "fernandezgonzalezMigracionesCegueraAutoficcion2025.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "fuentesAutoficcionMexicoEstudios2023.html", target: "campobelloCartuchoRelatosLucha2016.html" },
+        { source: "fuentesAutoficcionMexicoEstudios2023.html", target: "gerberbicecciConjuntoVacio2021.html" },
+        { source: "fuentesAutoficcionMexicoEstudios2023.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "fuentesAutoficcionMexicoEstudios2023.html", target: "vicensLibroVacio2020.html" },
+        { source: "fuentesAutoficcionMexicoEstudios2023.html", target: "riveragarzaMuerteMe2007.html" },
+        { source: "gomezcanolesAutoriaAutoficcionMarco2025.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "gutierrezdevelascoPresenciaAusenciaResguardo2024a.html", target: "tarazonaIslaPartida2021.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "gerberbicecciConjuntoVacio2021.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "duenasAmigo1991.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "duenasFuga1991.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "davilaNocheGuitarrasRotas2016.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "arredondoSenal1965.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "glantzGenealogias2006.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "jacobsHojasMuertas1987.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "castellanosLeccionCocina1992.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "luiselliIngravidos2012.html" },
+        { source: "gutierrezestupinanAutoficcionAmericaLatina2024a.html", target: "luiselliPapelesFalsos2010.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "duenasAmigo1991.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "garroGato1997.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "duenasFuga1991.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "davilaNocheGuitarrasRotas2016.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "arredondoSenal1965.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "glantzGenealogias2006.html" },
+        { source: "gutierrezestupinanTornoAutoficcionBreve2024a.html", target: "castellanosLeccionCocina1992.html" },
+        { source: "licataFiliacionesHiladasCristina2023.html", target: "riveragarzaAutobiografiaAlgodon2020.html" },
+        { source: "lopezmorenoCuerpoFragmentadoComo2024a.html", target: "chapelaProceso2021.html" },
+        { source: "murciaEstrategiasAutoficcionFabuladora2021.html", target: "riveragarzaMuerteMe2007.html" },
+        { source: "perweenPosmemoriaIdentidadAutoficcion2024.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "villegassalasReconfiguracionMandatoMasculinidad2023.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "wentworthAritmeticaQueEncarna2022.html", target: "nettelCuerpoQueNaci2008.html" },
+        { source: "arredondoInes.html",  target: "arredondoSenal1965.html" },
+        { source: "campobelloNellie.html",  target: "campobelloCartuchoRelatosLucha2016.html" },
+        { source: "gerberbicecciVeronica.html",  target: "gerberbicecciConjuntoVacio2021.html" },
+        { source: "glantzMargo.html",  target: "glantzGenealogias2006.html" },
+        { source: "jacobsBarbara.html",  target: "jacobsHojasMuertas1987.html" },
+        { source: "luiselliValeria.html",  target: "luiselliPapelesFalsos2010.html" },
+        { source: "luiselliValeria.html",  target: "luiselliIngravidos2012.html" },
+        { source: "nettelGuadalupe.html",  target: "nettelCuerpoQueNaci2008.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaMasMia1998.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaMuerteMe2007.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaImaginacionPublica2015.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaNadieMeVera2016.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaMalTaiga2019.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaAutobiografiaAlgodon2020.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaCrestaIlion2020.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaMuertosIndocilesNecroescrituras2020.html" },
+        { source: "riveragarzaCristina.html",  target: "riveragarzaInvencibleVeranoLiliana2023.html" },
+        { source: "tarazonaDaniela.html",  target: "tarazonaIslaPartida2021.html" },
+        { source: "vicensJosefine.html",  target: "vicensLibroVacio2020.html" },
+        { source: "duenasGuadalupe.html",  target: "duenasAmigo1991.html" },
+        { source: "duenasGuadalupe.html",  target: "duenasFuga1991.html" },
+        { source: "castellanosRosario.html",  target: "castellanosLeccionCocina1992.html" },
+        { source: "garroElena.html",  target: "garroGato1997.html" },
+        { source: "davilaAmparo.html",  target: "davilaNocheGuitarrasRotas2016.html" },
+        { source: "chapelaAndrea.html",  target: "chapelaProceso2021.html" }
+        
+      ]
+    };
+
+    // ---------------------------------------------------------
+    // 2. Basic SVG and simulation setup
+    // ---------------------------------------------------------
+    const svg = d3.select("#graph");
+    const container = document.getElementById("graph-container");
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    const g = svg.append("g");
+
+    // Zoom + pan (optional)
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.3, 4])
+        .on("zoom", (event) => {
+          g.attr("transform", event.transform);
+        })
+    );
+
+    const simulation = d3.forceSimulation(graphData.nodes)
+      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(120))
+      .force("charge", d3.forceManyBody().strength(-300))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(40));
+
+    // ---------------------------------------------------------
+    // 3. Draw links
+    // ---------------------------------------------------------
+    const link = g.append("g")
+      .attr("stroke-opacity", 0.8)
+      .selectAll("line")
+      .data(graphData.links)
+      .join("line")
+      .attr("class", "link");
+
+    // ---------------------------------------------------------
+    // 4. Draw nodes (circles + labels)
+    // ---------------------------------------------------------
+    const node = g.append("g")
+      .selectAll("g")
+      .data(graphData.nodes)
+      .join("g")
+      .attr("class", "node")
+      .call(
+        d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended)
+      );
+
+    // 👉 Set your specific circle color here
+    //const CIRCLE_COLOR = "#7c3aed"; // purple; change this to whatever you like
+
+    node.append("circle")
+      .attr("r", 16)
+      .attr("fill", d => d.color || "#7c3aed")  // fallback color just in case
+      .on("click", (event, d) => {
+        // Update iframe src
+        document.getElementById("viewer").src = d.id;
+
+        // Mark selected node visually
+        node.classed("selected", n => n.id === d.id);
+      });
+
+    node.append("text")
+      .attr("x", 20)
+      .attr("y", 4)
+      .text(d => d.title || d.id);
+
+    // ---------------------------------------------------------
+    // 5. Tick updates
+    // ---------------------------------------------------------
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+    // ---------------------------------------------------------
+    // 6. Drag handlers
+    // ---------------------------------------------------------
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // ---------------------------------------------------------
+    // 7. Handle window resize (optional)
+    // ---------------------------------------------------------
+    window.addEventListener("resize", () => {
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
+      svg.attr("viewBox", [0, 0, newWidth, newHeight]);
+      simulation.force("center", d3.forceCenter(newWidth / 2, newHeight / 2));
+      simulation.alpha(0.5).restart();
+    });
+  </script>
+</body>
+</html>

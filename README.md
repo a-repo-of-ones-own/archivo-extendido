@@ -19,15 +19,22 @@ Así mismo declaro que se hace un uso ético de la AI con un desglose de las her
 
 Para el contenido de las fichas de las escritoras se hace referencia al contenido de la página web de la Enciclopedia de la Literatura en México5, de la Fundación para las Letras Mexicanas A.C.
 Referencias:
+
 1 Franco Moretti, “Conjectures on World Literature”, New Left Review, núm. 1 (febrero de 2000): 54–68.
+
 2 Virginia Woolf, A Room of One’s Own, First edition, ed. Mark Hussey, with Susan Gubar (Harcourt, 2005).
+
 3 “ChatGPT | AI Chatbot to Discover, Learn & Create”, consultado el 17 de noviembre de 2025, https://chatgpt.com/overview/.
+
 4 “D3 by Observable | The JavaScript library for bespoke data visualization”, consultado el 17 de noviembre de 2025, https://d3js.org/.
+
 5 Fundación para las Letras Mexicanas A.C., “Enciclopedia de la Literatura en México - FLM”, consultado el 16 de noviembre de 2025, https://www.elem.mx/.
+
 
 
 Otro recursos:
 
 “Archive Boxes Shelf - Free Photo on Pixabay”, consultado el 14 de noviembre de 2025, https://pixabay.com/photos/archive-boxes-shelf-folders-1850170/.
+
 “Template 3x5 Index Card Expinfranklinfireco B128ff74 #ResumeSample #ResumeFor | Note Card Template, Printable Note Cards, Photo Card Template”, Pinterest, consultado el 14 de noviembre de 2025, https://www.pinterest.com/pin/free-clipart-popular-1001freedownloadscom--361976888817295604/.
 

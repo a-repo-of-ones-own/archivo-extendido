@@ -32,7 +32,7 @@ Referencias:
 
 
 
-Otro recursos:
+Otros recursos:
 
 “Archive Boxes Shelf - Free Photo on Pixabay”, consultado el 14 de noviembre de 2025, https://pixabay.com/photos/archive-boxes-shelf-folders-1850170/.
 

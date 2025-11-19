@@ -27,11 +27,17 @@ Para la gestión de referencias se usó el gestor Zotero5.
 
 Para el contenido de las fichas de las escritoras se hace referencia al contenido de la página web de la Enciclopedia de la Literatura en México6, de la Fundación para las Letras Mexicanas A.C.
 Referencias:
+
 1 Franco Moretti, “Conjectures on World Literature”, New Left Review, núm. 1 (febrero de 2000): 54–68.
+
 2 Virginia Woolf, A Room of One’s Own, First edition, ed. Mark Hussey, with Susan Gubar (Harcourt, 2005).
+
 3 “ChatGPT | AI Chatbot to Discover, Learn & Create”, consultado el 17 de noviembre de 2025, https://chatgpt.com/overview/.
+
 4 “D3 by Observable | The JavaScript library for bespoke data visualization”, consultado el 17 de noviembre de 2025, https://d3js.org/.
+
 5 “Zotero | Your personal research assistant”. Consultado el 18 de noviembre de 2025. https://www.zotero.org/.
+
 6 Fundación para las Letras Mexicanas A.C., “Enciclopedia de la Literatura en México - FLM”, consultado el 16 de noviembre de 2025, https://www.elem.mx/.
 
 
